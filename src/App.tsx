@@ -166,7 +166,7 @@ function Header({
           {/* Logo */}
           <button onClick={() => { setPage('landing'); setMobileOpen(false); }}
             className="flex items-center gap-3 shrink-0">
-            <img src="/seconds-digital-logo.jpg" alt="Seconds Digital" className="w-12 h-12 object-contain rounded-full" />
+            <img src={`${import.meta.env.BASE_URL}seconds-digital-logo.jpg`} alt="Seconds Digital" className="w-12 h-12 object-contain rounded-full" />
             <div className="text-left hidden sm:block">
               <div className="font-display text-white font-semibold text-xl tracking-tight leading-none">Second Digital</div>
               <div className="text-gray-400 text-[10px] tracking-[0.2em] mt-1 uppercase">Refurbished Laptops</div>
@@ -280,7 +280,7 @@ function LandingPage({ setPage }: { setPage: (p: Page) => void }) {
         
         className="relative flex items-center overflow-hidden pt-[90px] h-auto min-h-[600px] lg:h-[650px] bg-cover bg-center"
         style={{
-          backgroundImage: 'url(/assets/hero-laptop-bg.jpeg)'
+          backgroundImage: `url(${import.meta.env.BASE_URL}assets/hero-laptop-bg.jpeg)`
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-[#030712] via-[#030712]/60 to-transparent z-0" />
