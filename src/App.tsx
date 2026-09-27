@@ -3,7 +3,7 @@ import heroVideo from '../a_realiastic_drone_shot_of_tri.mp4';
 import dellLaptopImage from '../DELL.jpg';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
-type Page = 'landing' | 'products' | 'about';
+type Page = 'landing' | 'products' | 'about' | 'reviews';
 
 interface User {
   fullName: string;
@@ -155,57 +155,60 @@ function Header({
     { key: 'landing', label: 'Home' },
     { key: 'products', label: 'Products' },
     { key: 'about', label: 'About Us' },
+    { key: 'reviews', label: 'Reviews' },
   ];
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50" style={{ background: 'rgba(250,248,245,0.92)', backdropFilter: 'blur(12px)', borderBottom: '1px solid #E2DDD5' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <header className="fixed top-0 inset-x-0 z-50 bg-[#030712]/80 backdrop-blur-md border-b border-white/5">
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-[90px]">
 
           {/* Logo */}
           <button onClick={() => { setPage('landing'); setMobileOpen(false); }}
-            className="flex items-center gap-2.5 shrink-0">
-            <img src="/seconds-digital-logo.jpg" alt="Seconds Digital" className="w-10 h-10 object-contain rounded-md" />
-            <span className="font-display text-navy font-semibold text-xl tracking-tight">Seconds Digital</span>
+            className="flex items-center gap-3 shrink-0">
+            <img src="/seconds-digital-logo.jpg" alt="Seconds Digital" className="w-12 h-12 object-contain rounded-full" />
+            <div className="text-left hidden sm:block">
+              <div className="font-display text-white font-semibold text-xl tracking-tight leading-none">Second Digital</div>
+              <div className="text-gray-400 text-[10px] tracking-[0.2em] mt-1 uppercase">Refurbished Laptops</div>
+            </div>
           </button>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex flex-1 justify-center items-center gap-12">
             {navItems.map(({ key, label }) => (
               <button key={key} onClick={() => setPage(key)}
-                className="relative text-sm font-medium pb-0.5 transition-colors"
-                style={{ color: page === key ? '#1C2340' : '#8B8278' }}>
+                className={`relative text-[15px] font-medium pb-2 transition-colors ${page === key ? 'text-white' : 'text-gray-300 hover:text-white'}`}>
                 {label}
                 {page === key && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-gold rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#3B82F6]" />
                 )}
               </button>
             ))}
           </nav>
                 
           {/* Right Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-6 shrink-0">
             {/* Search desktop */}
             <div className="relative hidden sm:flex items-center">
               {showSearch ? (
-                <div className="flex items-center bg-white border border-border rounded-full px-3 py-1.5 gap-2 shadow-sm">
-                  <svg className="w-4 h-4 text-muted shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center bg-white/5 border border-white/10 rounded-full px-4 py-2 gap-2">
+                  <svg className="w-4 h-4 text-gray-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
-                  <input autoFocus type="text" placeholder="Search products…"
+                  <input autoFocus type="text" placeholder="Search..."
                     value={searchQuery}
                     onChange={(e) => { setSearchQuery(e.target.value); if (e.target.value) setPage('products'); }}
-                    className="text-sm outline-none bg-transparent text-navy placeholder:text-muted w-36" />
-                  <button onClick={() => { setShowSearch(false); setSearchQuery(''); }} className="text-muted hover:text-navy transition-colors">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    className="text-sm outline-none bg-transparent text-white placeholder:text-gray-500 w-40" />
+                  <button onClick={() => { setShowSearch(false); setSearchQuery(''); }} className="text-gray-400 hover:text-white transition-colors">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
               ) : (
-                <button onClick={() => setShowSearch(true)} className="p-2 rounded-full text-muted hover:text-navy hover:bg-cream-dark transition-all">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                <button onClick={() => setShowSearch(true)} className="p-2 text-gray-300 hover:text-white transition-all">
+                  <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
                 </button>
               )}
@@ -215,45 +218,28 @@ function Header({
             {user ? (
               <div className="relative" ref={profileRef}>
                 <button onClick={() => setShowProfile(!showProfile)}
-                  className="flex items-center gap-2 bg-navy text-cream rounded-full pl-1.5 pr-3 py-1.5 text-sm font-medium hover:bg-navy-hover transition-all">
-                  <div className="w-6 h-6 rounded-full bg-gold flex items-center justify-center text-navy font-bold text-xs">
-                    {user.fullName.charAt(0).toUpperCase()}
-                  </div>
-                  <span className="hidden sm:block max-w-[80px] truncate">{user.fullName.split(' ')[0]}</span>
-                  <svg className="w-3.5 h-3.5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  className="flex items-center gap-2 border border-blue-500/30 text-white rounded-full px-5 py-2 text-sm font-medium hover:bg-white/5 transition-all">
+                  <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                   </svg>
+                  <span className="hidden sm:block max-w-[80px] truncate ml-1">{user.fullName.split(' ')[0]}</span>
                 </button>
                 {showProfile && (
-                  <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-border overflow-hidden z-50">
-                    <div className="p-4 bg-navy">
+                  <div className="absolute right-0 top-full mt-3 w-64 bg-[#0B1121] rounded-2xl shadow-2xl border border-blue-500/20 overflow-hidden z-50">
+                    <div className="p-4 bg-[#151E32]">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gold flex items-center justify-center text-navy font-bold text-base shrink-0">
+                        <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-base shrink-0">
                           {user.fullName.charAt(0).toUpperCase()}
                         </div>
                         <div className="min-w-0">
-                          <p className="text-cream font-semibold text-sm truncate">{user.fullName}</p>
-                          <p className="text-cream/60 text-xs truncate">{user.email}</p>
+                          <p className="text-white font-semibold text-sm truncate">{user.fullName}</p>
+                          <p className="text-gray-400 text-xs truncate">{user.email}</p>
                         </div>
                       </div>
                     </div>
-                    <div className="p-3 space-y-0.5">
-                      {[
-                        { icon: 'M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z', label: user.phone },
-                        { icon: 'M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75', label: user.email },
-                        { icon: 'M15 10.5a3 3 0 11-6 0 3 3 0 016 0zM19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z', label: `${user.district}, Tamil Nadu` },
-                      ].map((item) => (
-                        <div key={item.label} className="flex items-center gap-2.5 px-3 py-2 rounded-lg">
-                          <svg className="w-4 h-4 text-muted shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={item.icon} />
-                          </svg>
-                          <span className="text-sm text-navy/70 truncate">{item.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="border-t border-border p-2">
+                    <div className="border-t border-blue-500/20 p-2">
                       <button onClick={() => { setUser(null); setShowProfile(false); }}
-                        className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                        className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
                         Sign out
                       </button>
                     </div>
@@ -262,192 +248,322 @@ function Header({
               </div>
             ) : (
               <button onClick={onLoginClick}
-                className="bg-navy text-cream text-sm font-medium px-5 py-2 rounded-full hover:bg-navy-hover transition-all">
-                Login
+                className="flex items-center gap-2 border border-blue-500/30 text-white text-sm font-medium px-6 py-2 rounded-full hover:bg-white/5 transition-all">
+                <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
+                <span>Login</span>
               </button>
             )}
 
             {/* Mobile hamburger */}
             <button onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 text-navy rounded-lg hover:bg-cream-dark transition-colors">
+              className="md:hidden p-2 text-white rounded-lg hover:bg-white/5 transition-colors">
               {mobileOpen
-                ? <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                : <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>}
+                ? <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                : <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>}
             </button>
           </div>
         </div>
       </div>
-
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="md:hidden border-t border-border bg-cream">
-          <div className="px-4 py-3 space-y-1">
-            {navItems.map(({ key, label }) => (
-              <button key={key} onClick={() => { setPage(key); setMobileOpen(false); }}
-                className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium transition-colors"
-                style={{ background: page === key ? '#1C2340' : 'transparent', color: page === key ? '#FAF8F5' : '#1C2340' }}>
-                {label}
-              </button>
-            ))}
-            <div className="pt-1">
-              <div className="flex items-center bg-white border border-border rounded-full px-3 py-2 gap-2">
-                <svg className="w-4 h-4 text-muted shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                </svg>
-                <input type="text" placeholder="Search products…"
-                  value={searchQuery}
-                  onChange={(e) => { setSearchQuery(e.target.value); if (e.target.value) { setPage('products'); setMobileOpen(false); } }}
-                  className="text-sm outline-none bg-transparent text-navy placeholder:text-muted flex-1" />
-                {searchQuery && (
-                  <button onClick={() => setSearchQuery('')} className="text-muted hover:text-navy">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </header>
   );
 }
 
+
 // ─── Landing Page ─────────────────────────────────────────────────────────────
 function LandingPage({ setPage }: { setPage: (p: Page) => void }) {
-  const features = [
-    { icon: 'M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12', label: 'Free Delivery', sub: 'On orders above ₹10000' },
-    { icon: 'M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z', label: 'Quality Assured', sub: '100% genuine products' },
-    { icon: 'M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3', label: '1 year Warranty', sub: '6 months service support ' },
-    { icon: 'M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z', label: 'WhatsApp Support', sub: 'Get in touch' },
-  ];
-
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#020617]">
       {/* Hero */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
-        <div className="absolute inset-0 bg-navy" />
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
-          <div className="flex flex-col items-start gap-10 lg:flex-row lg:items-center lg:gap-16">
-            <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-2 text-gold text-xs font-medium tracking-widest uppercase mb-6">
-              <span className="w-8 h-px bg-gold" />
-              Not juz a laptop it's a leap towards your career
-            </span>
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl text-cream font-semibold leading-[1.05] mb-6">
-              TECHNOLOGY<br />
-              <span className="italic text-gold-light">MEETS</span><br />
-              EXPERTISE.
-            </h1>
-            <p className="text-cream/75 text-lg sm:text-xl leading-relaxed mb-10 max-w-lg">
-              Discover our curated selection of Corparate Laptops — Carefully chosen for perfomance,reliability and everyday excellence. Every device is selected with purpose,Built on Trust,Serving TRICHY with technology you can rely on.
-            </p>
+      <section 
+        
+        className="relative flex items-center overflow-hidden pt-[90px] h-auto min-h-[600px] lg:h-[650px] bg-cover bg-center"
+        style={{
+          backgroundImage: 'url(/assets/hero-laptop-bg.jpeg)'
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-[#030712] via-[#030712]/60 to-transparent z-0" />
+        <div className="absolute inset-0 bg-[#030712]/40 z-0 sm:hidden" />
+        
+        <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-12 h-full flex flex-col justify-center">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 h-full">
+            
+            {/* Left side (~50%) */}
+            <div className="w-full lg:w-[50%] flex flex-col items-start pt-6 lg:pt-0 lg:-mt-10">
+              <div className="inline-flex items-center mb-6">
+                <span className="w-6 h-[2px] bg-[#3B82F6] mr-4"></span>
+                <span className="text-gray-400 text-[13px] font-semibold tracking-[0.25em] uppercase">
+                  REFURBISHED LAPTOPS &nbsp;&nbsp;|&nbsp;&nbsp; TRICHY
+                </span>
+              </div>
+              
+              <h1 className="font-display text-5xl lg:text-[5.5rem] font-medium leading-[1.05] mb-5 tracking-tight">
+                <span className="text-white block mb-1">Technology</span>
+                <span className="text-[#60A5FA] block">Meets Expertise.</span>
+              </h1>
+              
+              <p className="text-gray-300 text-[17px] leading-relaxed mb-10 max-w-[500px] font-light">
+                Premium refurbished laptops, tested for performance, reliability and everyday excellence. <span className="font-medium text-white">Because your next laptop deserves more than just a price tag.</span>
+              </p>
+              
+              {/* Trust Features */}
+              <div className="flex flex-wrap lg:flex-nowrap gap-5 w-full mb-10">
+                {[
+                  { icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', title: 'Quality', sub: 'Checked' },
+                  { icon: 'M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z', title: 'Genuine', sub: 'Warranty' },
+                  { icon: 'M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12', title: 'Fast & Safe', sub: 'Delivery' },
+                  { icon: 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z', title: 'Dedicated', sub: 'Support' }
+                ].map((f, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-[10px] bg-blue-900/40 border border-blue-500/30 flex items-center justify-center shrink-0">
+                      <svg className="w-[22px] h-[22px] text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={f.icon} />
+                      </svg>
+                    </div>
+                    <div className="text-white text-[13px] leading-tight whitespace-nowrap">
+                      {f.title}<br/><span className="text-gray-300">{f.sub}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-5">
+                <button onClick={() => setPage('products')} className="px-8 py-3.5 bg-[#3B82F6] hover:bg-blue-500 text-white font-medium rounded-full shadow-[0_0_25px_rgba(59,130,246,0.6)] hover:shadow-[0_0_35px_rgba(59,130,246,0.8)] transition-all flex items-center justify-center gap-2 text-[15px]">
+                  Explore Laptops
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                </button>
+                <button onClick={() => setPage('about')} className="px-8 py-3.5 bg-transparent border border-gray-500 hover:border-gray-400 text-white font-medium rounded-full transition-all flex items-center justify-center text-[15px]">
+                  About Us
+                </button>
+              </div>
             </div>
-            <div className="flex w-full max-w-sm flex-col gap-3 sm:flex-row lg:w-52 lg:shrink-0 lg:flex-col">
-              <button onClick={() => setPage('products')} className="site-button site-button-primary w-full">
-                View Laptops
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+
+            {/* Right side - Handwritten Text only */}
+            <div className="w-full lg:w-[50%] relative h-[20vh] lg:h-full flex items-center justify-end">
+              {/* Handwritten text */}
+              <div className="absolute top-0 lg:top-[12%] right-0 lg:right-[8%] z-20 -rotate-12 hidden md:block">
+                <div className="font-[Caveat,cursive] text-[40px] text-[#E0E7FF] leading-[1] drop-shadow-md" style={{ fontFamily: "'Caveat', 'Segoe Script', cursive" }}>
+                  Refurbished<br />
+                  <span className="ml-6">Not Just</span><br />
+                  <span className="ml-12 text-[#E0E7FF]">Recycled</span>
+                </div>
+                {/* SVG underline swoosh */}
+                <svg className="absolute -bottom-4 right-0 w-32 h-6 text-[#60A5FA]" viewBox="0 0 100 20" fill="none" preserveAspectRatio="none">
+                  <path d="M5,15 Q50,0 95,10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
                 </svg>
-              </button>
-              <button onClick={() => setPage('about')} className="site-button site-button-secondary w-full">
-                About us
-              </button>
+              </div>
             </div>
           </div>
         </div>
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-cream/40">
-          <span className="text-xs tracking-widest uppercase">.</span>
-          <div className="w-px h-10 bg-cream/20" style={{ animation: 'pulse 2s infinite' }} />
-        </div>
       </section>
+{/* BOTTOM TRUSTED BRANDS STRIP */}
+<section className="bg-[#030712] border-b border-white/5 relative z-20 h-auto xl:h-[150px] flex items-center">
+  <div className="max-w-[1400px] w-full mx-auto px-6 sm:px-10">
 
-      {/* Trust bar */}
-      <section className="bg-navy py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((f) => (
-              <div key={f.label} className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gold/15 flex items-center justify-center shrink-0">
-                  <svg className="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={f.icon} />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-cream text-sm font-semibold">{f.label}</p>
-                  <p className="text-cream/50 text-xs">{f.sub}</p>
-                </div>
-              </div>
+    <div className="flex items-center justify-between transform -translate-y-4">
+
+      {/* LEFT BLOCK */}
+      <div className="flex flex-col shrink-0">
+
+        {/* Trusted Brands label */}
+        <div className="flex items-center gap-3 mb-1.5">
+          <span className="w-6 h-[1px] bg-[#3B82F6]"></span>
+
+          <span className="text-gray-300 text-[11px] font-semibold tracking-[0.18em] uppercase">
+            Trusted Brands
+          </span>
+        </div>
+
+        {/* Logos */}
+        <div className="flex items-center gap-5">
+
+          {/* Dell */}
+          <div className="w-11 h-11 rounded-full border border-white flex items-center justify-center text-white font-bold text-sm">
+            DELL
+          </div>
+
+          <div className="w-[1px] h-7 bg-gray-700"></div>
+
+          {/* HP */}
+          <div className="text-white font-serif italic text-3xl font-bold">
+            hp
+          </div>
+
+          <div className="w-[1px] h-7 bg-gray-700"></div>
+
+          {/* Lenovo */}
+          <div className="text-white font-bold text-xl tracking-tight">
+            Lenovo
+          </div>
+        </div>
+      </div>
+
+      {/* CENTER DESCRIPTIONS */}
+      <div className="flex items-center gap-5 whitespace-nowrap">
+
+        <span className="text-gray-300 text-[15px]">
+          Dell for <span className="text-[#3B82F6]">Reliability</span>
+        </span>
+
+        <div className="w-[1px] h-6 bg-gray-700"></div>
+
+        <span className="text-gray-300 text-[15px]">
+          HP for <span className="text-[#3B82F6]">Premium</span>
+        </span>
+
+        <div className="w-[1px] h-6 bg-gray-700"></div>
+
+        <span className="text-gray-300 text-[15px]">
+          Lenovo for <span className="text-[#3B82F6]">Affordability</span>
+        </span>
+      </div>
+
+      {/* RIGHT LOCATION */}
+      <div className="flex items-center gap-4 shrink-0">
+
+        <svg
+          className="w-9 h-9 text-gray-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={1.5}
+            d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={1.5}
+            d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
+          />
+        </svg>
+
+        <div className="flex flex-col">
+          <span className="text-gray-400 text-[11px] uppercase tracking-wider leading-tight">
+            We do this business in
+          </span>
+
+          <span className="text-white text-[19px] font-bold relative w-fit mt-1">
+            Trichy
+
+            <span className="absolute -bottom-1 left-0 w-8 h-[2px] bg-[#3B82F6]"></span>
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+      {/* LOWER SECTIONS */}
+      <div className="bg-[#FAF8F5] rounded-t-[2.5rem] mt-2 relative z-20">
+
+        {/* Featured Products */}
+        <section className="pt-16 sm:pt-20 lg:pt-24 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+
+          {/* Section Header */}
+          <div className="flex items-end justify-between mb-10 sm:mb-12">
+            <div>
+              <span className="text-[#3B82F6] text-xs font-semibold tracking-widest uppercase">
+                Fast selling Laptops
+              </span>
+
+              <h2 className="font-display text-4xl sm:text-5xl text-navy mt-2 font-bold tracking-tight">
+                Top Picks
+              </h2>
+            </div>
+
+            <button
+              onClick={() => setPage('products')}
+              className="px-6 py-2.5 border border-gray-300 rounded-full text-navy hover:bg-gray-100 transition-colors hidden sm:inline-flex items-center gap-2 text-sm font-semibold"
+            >
+              View all
+
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                />
+              </svg>
+            </button>
+          </div>
+
+          {/* Product Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 lg:gap-8">
+            {PRODUCTS.slice(0, 3).map((product) => (
+              <MiniProductCard
+                key={product.id}
+                product={product}
+                onViewProduct={() => setPage('products')}
+              />
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Featured Products */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="flex items-end justify-between mb-12">
-          <div>
-            <span className="text-gold text-xs font-medium tracking-widest uppercase">Fast selling Laptops</span>
-            <h2 className="font-display text-4xl sm:text-5xl text-navy mt-2 font-semibold">Top Picks</h2>
+          {/* Mobile View All */}
+          <div className="mt-8 text-center sm:hidden">
+            <button
+              onClick={() => setPage('products')}
+              className="px-8 py-3 border border-gray-300 rounded-full text-navy hover:bg-gray-100 transition-colors text-sm font-semibold"
+            >
+              View all Devices
+            </button>
           </div>
-          <button onClick={() => setPage('products')} className="site-button site-button-outline hidden sm:inline-flex">
-            View all
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-            </svg>
-          </button>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {PRODUCTS.slice(0, 3).map((product) => (
-            <MiniProductCard key={product.id} product={product} onViewProduct={() => setPage('products')} />
-          ))}
-        </div>
-        <div className="mt-8 text-center sm:hidden">
-          <button onClick={() => setPage('products')} className="site-button site-button-outline">
-            View all Devices
-          </button>
-        </div>
-      </section>
 
-      {/* CTA Banner */}
-      <section className="mx-4 sm:mx-6 lg:mx-8 mb-20 rounded-3xl overflow-hidden relative" style={{ background: 'linear-gradient(135deg, #1C2340 0%, #2A3456 100%)' }}>
-        <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(circle at 70% 50%, #C9973E 0%, transparent 60%)' }} />
-        <div className="relative z-10 py-16 px-8 sm:px-16 text-center">
-          <p className="text-gold text-xs font-medium tracking-widest uppercase mb-4"></p>
-          <h2 className="font-display text-3xl sm:text-5xl text-cream font-semibold mb-4 leading-tight">
-            Premium quality.<br />
-            <span className="italic text-gold-light">Delivered to your door.</span>
-          </h2>
-          <p className="text-cream/60 text-base mb-8 max-w-md mx-auto">
-            Browse our full collection of Corparate series Laptop, all available across Tamil Nadu with fast and reliable delivery.
-          </p>
-          <button onClick={() => setPage('products')} className="site-button site-button-primary">
-            Get in store
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-            </svg>
-          </button>
-        </div>
-      </section>
+        </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-10 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 bg-navy rounded-md flex items-center justify-center">
-              <span className="text-gold font-display font-bold text-xs">2S</span>
+        {/* CTA Banner */}
+        <section className="px-4 sm:px-6 lg:px-8 pb-24">
+          <div className="mx-auto max-w-7xl">
+            <div className="rounded-[2.5rem] overflow-hidden relative shadow-2xl" style={{ background: 'linear-gradient(135deg, #0A0F1C 0%, #151E32 100%)' }}>
+              <div className="absolute inset-0 opacity-15" style={{ backgroundImage: 'radial-gradient(circle at 70% 50%, #3B82F6 0%, transparent 60%)' }} />
+              <div className="relative z-10 py-20 px-8 sm:px-16 text-center">
+                <h2 className="font-display text-4xl sm:text-5xl text-white font-semibold mb-6 leading-tight tracking-tight">
+                  Premium quality.<br />
+                  <span className="italic text-[#3B82F6]">Delivered to your door.</span>
+                </h2>
+                <p className="text-gray-300 text-lg mb-10 max-w-xl mx-auto font-light">
+                  Browse our full collection of Corporate series Laptops, all available across Tamil Nadu with fast and reliable delivery.
+                </p>
+                <button onClick={() => setPage('products')} className="px-8 py-4 bg-[#3B82F6] hover:bg-blue-500 text-white font-semibold rounded-full shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all inline-flex items-center gap-2 text-lg">
+                  Get in store
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                  </svg>
+                </button>
+              </div>
             </div>
-            <span className="font-display text-navy font-semibold">Seconds Digital</span>
           </div>
-          <p className="text-muted text-sm">© 2026 Seconds Digital. All rights reserved. Tamil Nadu, India.</p>
-          <div className="flex items-center gap-4 text-sm text-muted">
-            <a href="#" className="hover:text-navy transition-colors">Privacy</a>
-            <a href="#" className="hover:text-navy transition-colors">Terms</a>
-            <a href="#" className="hover:text-navy transition-colors">Contact</a>
+        </section>
+
+        {/* Footer */}
+        <footer className="border-t border-gray-200 py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-navy rounded-lg flex items-center justify-center">
+                <span className="text-white font-display font-bold text-sm">2S</span>
+              </div>
+              <span className="font-display text-navy font-bold text-lg tracking-tight">Seconds Digital</span>
+            </div>
+            <p className="text-gray-500 text-sm font-medium">© 2026 Seconds Digital. All rights reserved. Tamil Nadu, India.</p>
+            <div className="flex items-center gap-6 text-sm text-gray-500 font-medium">
+              <a href="#" className="hover:text-navy transition-colors">Privacy</a>
+              <a href="#" className="hover:text-navy transition-colors">Terms</a>
+              <a href="#" className="hover:text-navy transition-colors">Contact</a>
+            </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </div>
   );
 }
