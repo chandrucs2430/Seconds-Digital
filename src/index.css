@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Fraunces', serif;
+  --font-sans: 'Outfit', sans-serif;
+  --color-navy: #1C2340;
+  --color-navy-hover: #151a30;
+  --color-gold: #C9973E;
+  --color-gold-light: #E8C47A;
+  --color-cream: #FAF8F5;
+  --color-cream-dark: #EDE8DF;
+  --color-muted: #8B8278;
+  --color-border: #E2DDD5;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: #FAF8F5;
+  color: #1C2340;
+}
+
+.site-button {
+  min-height: 3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.site-button:hover {
+  transform: translateY(-1px);
+}
+
+.site-button:focus-visible {
+  outline: 3px solid rgba(232, 196, 122, 0.9);
+  outline-offset: 3px;
+}
+
+.site-button-primary {
+  background-color: #C9973E;
+  color: #1C2340;
+}
+
+.site-button-primary:hover {
+  background-color: #E8C47A;
+}
+
+.site-button-secondary {
+  border: 1px solid rgba(250, 248, 245, 0.55);
+  color: #FAF8F5;
+}
+
+.site-button-secondary:hover {
+  border-color: rgba(250, 248, 245, 0.9);
+  background-color: rgba(250, 248, 245, 0.12);
+}
+
+.site-button-outline {
+  border: 1px solid #E2DDD5;
+  color: #1C2340;
+}
+
+.site-button-outline:hover {
+  background-color: #EDE8DF;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero-video {
+    display: none;
+  }
+
+  .site-button {
+    transition: none;
+  }
+
+  .site-button:hover {
+    transform: none;
+  }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+*:hover {
+  scrollbar-color: rgba(201,151,62,0.3) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 2px;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background: rgba(201,151,62,0.3);
+}

@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Vite app",
+			"type": "shell",
+			"command": "cmd /d /s /c \"set PATH=C:\\Program Files\\nodejs;%PATH% && cd /d \"\"D:\\CS TECH - Copy\\seconds-digital-website (1)\"\" && npm install --no-fund --no-audit && npm run dev -- --host 0.0.0.0\"",
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}

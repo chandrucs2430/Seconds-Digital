@@ -1,0 +1,10 @@
+{
+  "description": "This interactive e-commerce platform offers users a seamless shopping experience with a professional layout, product browsing, and easy order placement via WhatsApp.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
