@@ -158,25 +158,30 @@ function Header({
     { key: 'reviews', label: 'Reviews' },
   ];
 
+  const navigate = (nextPage: Page) => {
+    setPage(nextPage);
+    setMobileOpen(false);
+  };
+
   return (
     <header className="fixed top-0 inset-x-0 z-50 bg-[#030712]/80 backdrop-blur-md border-b border-white/5">
       <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[90px]">
 
           {/* Logo */}
-          <button onClick={() => { setPage('landing'); setMobileOpen(false); }}
+          <button onClick={() => navigate('landing')}
             className="flex items-center gap-3 shrink-0">
             <img src="/seconds-digital-logo.jpg" alt="Seconds Digital" className="w-12 h-12 object-contain rounded-full" />
             <div className="text-left hidden sm:block">
-              <div className="font-display text-white font-semibold text-xl tracking-tight leading-none">Second Digital</div>
-              <div className="text-gray-400 text-[10px] tracking-[0.2em] mt-1 uppercase">Refurbished Laptops</div>
+              <div className="font-display text-white font-semibold text-xl tracking-tight leading-none">Seconds Digital</div>
+              <div className="text-gray-400 text-[10px] tracking-[0.2em] mt-1 uppercase">Branded Laptops</div>
             </div>
           </button>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex flex-1 justify-center items-center gap-12">
             {navItems.map(({ key, label }) => (
-              <button key={key} onClick={() => setPage(key)}
+              <button key={key} onClick={() => navigate(key)}
                 className={`relative text-[15px] font-medium pb-2 transition-colors ${page === key ? 'text-white' : 'text-gray-300 hover:text-white'}`}>
                 {label}
                 {page === key && (
@@ -257,7 +262,10 @@ function Header({
             )}
 
             {/* Mobile hamburger */}
-            <button onClick={() => setMobileOpen(!mobileOpen)}
+            <button type="button" onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-navigation"
               className="md:hidden p-2 text-white rounded-lg hover:bg-white/5 transition-colors">
               {mobileOpen
                 ? <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -266,6 +274,17 @@ function Header({
           </div>
         </div>
       </div>
+      {mobileOpen && (
+        <nav id="mobile-navigation" aria-label="Mobile navigation" className="md:hidden border-t border-white/10 bg-[#030712] px-4 py-3">
+          {navItems.map(({ key, label }) => (
+            <button key={key} type="button" onClick={() => navigate(key)}
+              aria-current={page === key ? 'page' : undefined}
+              className={`block w-full rounded-lg px-3 py-3 text-left text-sm font-medium ${page === key ? 'bg-white/10 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>
+              {label}
+            </button>
+          ))}
+        </nav>
+      )}
     </header>
   );
 }
@@ -294,7 +313,7 @@ function LandingPage({ setPage }: { setPage: (p: Page) => void }) {
               <div className="inline-flex items-center mb-6">
                 <span className="w-6 h-[2px] bg-[#3B82F6] mr-4"></span>
                 <span className="text-gray-400 text-[13px] font-semibold tracking-[0.25em] uppercase">
-                  REFURBISHED LAPTOPS &nbsp;&nbsp;|&nbsp;&nbsp; TRICHY
+                  Branded LAPTOPS &nbsp;&nbsp;|&nbsp;&nbsp; TRICHY
                 </span>
               </div>
               
@@ -304,7 +323,7 @@ function LandingPage({ setPage }: { setPage: (p: Page) => void }) {
               </h1>
               
               <p className="text-gray-300 text-[17px] leading-relaxed mb-10 max-w-[500px] font-light">
-                Premium refurbished laptops, tested for performance, reliability and everyday excellence. <span className="font-medium text-white">Because your next laptop deserves more than just a price tag.</span>
+                Premium Branded laptops, tested for performance, reliability and everyday excellence. <span className="font-medium text-white">Because your next laptop deserves more than just a price tag.</span>
               </p>
               
               {/* Trust Features */}
@@ -344,9 +363,9 @@ function LandingPage({ setPage }: { setPage: (p: Page) => void }) {
               {/* Handwritten text */}
               <div className="absolute top-0 lg:top-[12%] right-0 lg:right-[8%] z-20 -rotate-12 hidden md:block">
                 <div className="font-[Caveat,cursive] text-[40px] text-[#E0E7FF] leading-[1] drop-shadow-md" style={{ fontFamily: "'Caveat', 'Segoe Script', cursive" }}>
-                  Refurbished<br />
-                  <span className="ml-6">Not Just</span><br />
-                  <span className="ml-12 text-[#E0E7FF]">Recycled</span>
+                  Only<br />
+                  <span className="ml-6">Branded</span><br />
+                  <span className="ml-12 text-[#E0E7FF]">Laptops</span>
                 </div>
                 {/* SVG underline swoosh */}
                 <svg className="absolute -bottom-4 right-0 w-32 h-6 text-[#60A5FA]" viewBox="0 0 100 20" fill="none" preserveAspectRatio="none">
@@ -557,9 +576,7 @@ function LandingPage({ setPage }: { setPage: (p: Page) => void }) {
             </div>
             <p className="text-gray-500 text-sm font-medium">© 2026 Seconds Digital. All rights reserved. Tamil Nadu, India.</p>
             <div className="flex items-center gap-6 text-sm text-gray-500 font-medium">
-              <a href="#" className="hover:text-navy transition-colors">Privacy</a>
-              <a href="#" className="hover:text-navy transition-colors">Terms</a>
-              <a href="#" className="hover:text-navy transition-colors">Contact</a>
+              <button type="button" onClick={() => setPage('about')} className="hover:text-navy transition-colors">Contact</button>
             </div>
           </div>
         </footer>
@@ -1213,6 +1230,31 @@ function ProductsPage({ user, setUser, searchQuery, setSearchQuery }: {
   );
 }
 
+function ReviewsPage({ setPage }: { setPage: (p: Page) => void }) {
+  return (
+    <div className="min-h-screen bg-cream pt-20 pb-16">
+      <section className="bg-navy px-4 py-16 text-center text-cream sm:px-6 lg:px-8">
+        <span className="text-xs font-medium uppercase tracking-widest text-gold">Customer feedback</span>
+        <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">Reviews</h1>
+        <div className="mt-6 flex flex-col items-center gap-2">
+          <Stars rating={5} size={5} />
+          <p className="text-2xl font-semibold">5.0 out of 5</p>
+          <p className="text-sm text-cream/70">Based on 20 customer reviews</p>
+        </div>
+      </section>
+      <section className="mx-auto max-w-3xl px-4 py-12 text-center sm:px-6">
+        <p className="text-muted leading-relaxed">
+          Customers have rated Seconds Digital for computer repairs, laptop sales, and laptop servicing in Somarasampettai.
+        </p>
+        <button type="button" onClick={() => setPage('about')}
+          className="mt-7 rounded-full bg-navy px-6 py-3 text-sm font-semibold text-cream transition-colors hover:bg-navy-hover">
+          Visit and contact the shop
+        </button>
+      </section>
+    </div>
+  );
+}
+
 // ─── About Page ───────────────────────────────────────────────────────────────
 function AboutPage({ setPage }: { setPage: (p: Page) => void }) {
   const stats = [
@@ -1485,6 +1527,7 @@ function AboutPage({ setPage }: { setPage: (p: Page) => void }) {
 // ─── App Root ────────────────────────────────────────────────────────────────
 export default function App() {
   const [page, setPage] = useState<Page>('landing');
+  const [catalogVersion, setCatalogVersion] = useState(0);
   const [user, setUser] = useState<User | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAccessLogin, setShowAccessLogin] = useState(false);
@@ -1496,12 +1539,16 @@ export default function App() {
   };
 
   const handleSetUser = (u: User) => setUser(u);
+  const handlePageNavigation = (nextPage: Page) => {
+    setPage(nextPage);
+    if (nextPage === 'products') setCatalogVersion((version) => version + 1);
+  };
 
   return (
     <div className="min-h-screen bg-cream">
       <Header
         page={page}
-        setPage={setPage}
+        setPage={handlePageNavigation}
         user={user}
         setUser={setUser}
         searchQuery={searchQuery}
@@ -1512,12 +1559,14 @@ export default function App() {
         {page === 'landing' && <LandingPage setPage={setPage} />}
         {page === 'products' && (
           <ProductsPage
+            key={catalogVersion}
             user={user}
             setUser={handleSetUser}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
         )}
+        {page === 'reviews' && <ReviewsPage setPage={setPage} />}
         {page === 'about' && <AboutPage setPage={setPage} />}
       </main>
       {showAccessLogin && (

@@ -2,12 +2,32 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Run Vite app",
+			"label": "Run Seconds Digital",
 			"type": "shell",
-			"command": "cmd /d /s /c \"set PATH=C:\\Program Files\\nodejs;%PATH% && cd /d \"\"D:\\CS TECH - Copy\\seconds-digital-website (1)\"\" && npm install --no-fund --no-audit && npm run dev -- --host 0.0.0.0\"",
+			"command": "npm.cmd run dev:all",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${env:LOCALAPPDATA}\\Programs\\node-v20.20.2-win-x64;${env:PATH}"
+				}
+			},
 			"isBackground": true,
-			"problemMatcher": [],
-			"group": "build"
-		}
+			"problemMatcher": []
+		},
+		{
+			"label": "Verify Seconds Digital",
+			"type": "shell",
+			"command": "node --version; where.exe node; npm.cmd run typecheck; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; npm.cmd run build; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; node --check login-check.mjs",
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build",
+			"options": {
+				"env": {
+					"PATH": "${env:LOCALAPPDATA}\\Programs\\node-v20.20.2-win-x64;${env:PATH}"
+				}
+			}
+		},
 	]
 }

@@ -1,13 +1,15 @@
 {
-  "name": "figma-make-app",
+  "name": "seconds-digital-storefront",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "dev:api": "node server/index.mjs",
+    "dev:all": "node scripts/dev.mjs",
     "build": "vite build",
     "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
     "format": "oxfmt"
   },
   "dependencies": {
