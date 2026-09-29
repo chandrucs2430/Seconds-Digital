@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
   const apiPort = Number(env.API_PORT || 8787)
 
   return {
+    base: mode === 'production' ? '/Seconds-Digital/' : '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
