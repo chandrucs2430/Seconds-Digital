@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, FormEvent } from 'react';
 import heroVideo from '../a_realiastic_drone_shot_of_tri.mp4';
-import dellLaptopImage from '../DELL.jpg';
+import { PRODUCTS, type Product } from './data/products';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 type Page = 'landing' | 'products' | 'about' | 'reviews';
@@ -10,20 +10,6 @@ interface User {
   phone: string;
   email: string;
   district: string;
-}
-
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  fullDescription: string;
-  price: number;
-  originalPrice?: number;
-  image: string;
-  category: string;
-  rating: number;
-  reviews: number;
-  badge?: string;
 }
 
 // ─── Constants ──────────────────────────────────────────────────────────────
@@ -39,80 +25,6 @@ const DISTRICTS = [
   'Thoothukudi', 'Tiruchirappalli', 'Tirunelveli', 'Tirupathur',
   'Tiruppur', 'Tiruvannamalai', 'Tiruvallur', 'Vellore', 'Villupuram',
   'Virudhunagar',
-];
-
-const PRODUCTS: Product[] = [
-  {
-    id: 1, name: 'DELL Latitude 5401',
-    description: `9th Gen Intel Core i5 H-Series | 8GB RAM | 256GB SSD | 2GB Dedicated NVIDIA Graphics | Backlit Keyboard | Wi-Fi | USB Connectivity | Good Battery Backup | Original Charger | Ideal for Multitasking, Coding & Professional Use`,
-    fullDescription: `Key Features: 9th Gen Intel Core i5 H-Series processor for powerful multitasking and productivity.2GB Dedicated NVIDIA Graphics for enhanced visual and GPU performance.8GB RAM + 256GB SSD for responsive performance and faster boot times.Backlit Keyboard for comfortable typing in low-light conditions.Wi-Fi & USB Connectivity with charger included.Good Battery Backup for everyday work, study, and professional usage`,
-    price: 25999, image: 'https://i.pinimg.com/736x/7b/0e/84/7b0e842567476d5859497bbcaff4f9a8.jpg',
-    category: 'Dell', rating: 4.8, reviews: 124, badge: 'Bestseller',
-  },
-  {
-    id: 2, name: 'HP PROBOOK 440 G7',
-    description: `10th Gen Intel Core i5 | 8GB RAM | 256GB SSD | Premium Metal Body | Dual Storage Provision | Fingerprint Sensor | Camera | Wi-Fi | LAN | USB | HDMI | Good Battery Backup | Original Charger | 1-Year Warranty`,
-    fullDescription: `Key Features: 10th Gen Intel Core i5 processor for efficient multitasking and productivity.8GB RAM + 256GB SSD delivers responsive performance and faster boot/application loading.Premium Metal Body with a professional, durable design.Dual Storage Provision for future storage expansion.Fingerprint Sensor, camera, Wi-Fi, LAN, USB and HDMI connectivity.Good Battery Backup for everyday work and study.Original Charger + 1-Year Warranty included.`,
-    price: 26499, originalPrice: 29999,
-    image: 'https://i.pinimg.com/1200x/09/11/4f/09114fb2a08d0080388602cdf53efde4.jpg',
-    category: 'Hp', rating: 4.9, reviews: 87, badge: 'Hot deal',
-  },
-  {
-    id: 3, name: 'Levono Thinkpad T14',
-    description: '10th Gen Intel Core i5 | 8GB RAM | 256GB SSD | Business-Class ThinkPad Build | Camera | Wi-Fi Connectivity | Good Battery Backup | Original Charger | Import Grade | Excellent Condition | Ideal for Office Work, Coding & Productivity',
-    fullDescription: `Lenovo ThinkPad T14 with powerful performance, premium business-class design, fast SSD storage, smooth multitasking, and a sharp 14-inch display—ideal for office work, coding, study, and professional use.
-`,
-    price: 23999,originalPrice: 26499,
-    image: 'https://i.pinimg.com/736x/f2/b6/9b/f2b69b23313b68146c66dc888dc90fa2.jpg',
-    category: 'Lenovo', rating: 4.7, reviews: 203,
-  },
-  {
-    id: 4, name: 'MACBOOK PRO A2141',
-    description: 'Intel Core i9 8-Core | 16GB RAM | 1TB SSD | 4GB AMD Radeon Pro Graphics | 16″ Retina Display | 500 Nits Brightness | Touch Bar | 195 Battery Cycles | Apple Charger | A++++ Grade | Like-New Condition',
-    fullDescription: `Apple MacBook Pro 16-inch with 8-Core Intel Core i9 2.4GHz, 16GB RAM, 1TB SSD, 4GB AMD Radeon Pro Graphics, Retina Display, Touch Bar, 195 battery cycles, A++++ Like-New Condition, with Apple Charger included.
-
-`,
-     price: 55000,originalPrice: 69999,
-     image: 'https://cdsassets.apple.com/live/SZLF0YNV/images/sp/111932_sp809mbp16touch-space-2019.jpeg',
-    category: 'Apple', rating: 4.6, reviews: 56,
-  },
-  {
-    id: 5, name: 'DELL LATITUDE 7400',
-    description: '8th Gen Intel Core i5 | 8GB RAM | 256GB SSD | Touchscreen Display | Premium Business-Class Design | Camera | Wi-Fi | USB | HDMI | Good Battery Backup | Original Charger | Import Grade | Excellent Condition',
-    fullDescription: `Dell Latitude 7400 with powerful performance, premium business-class design, fast SSD storage, smooth multitasking, and a 14-inch Full HD display—ideal for office work, coding, study, and professional use.
-`,
-    price: 24999, originalPrice: 27999,
-    image: dellLaptopImage,
-    category: 'DELL', rating: 4.8, reviews: 312, badge: 'New',
-  },
-  {
-    id: 6, name: 'DELL LATITUDE 5300',
-    description: 'Dell Latitude 5300 with reliable performance, compact 13.3-inch design, fast SSD storage, smooth multitasking, and a professional build—ideal for business, office work, coding, study, and everyday use.',
-    fullDescription: 'Dell Latitude 5300 – Compact and reliable business laptop with powerful performance, speedy SSD, crisp display, and excellent portability, perfect for work, study, coding, and everyday productivity.',
-    price: 17999, image: dellLaptopImage,
-    category: 'DELL', rating: 4.9, reviews: 178, badge: 'Premium',
-  },
-  {
-    id: 7, name: 'ACER  ONE Z 14',
-    description: 'Acer One Z 14 – Stylish and lightweight laptop offering reliable everyday performance, smooth multitasking, fast storage, and a 14-inch display, ideal for students, office work, browsing, and entertainment.',
-    fullDescription: 'Acer One Z 14 – Compact and portable laptop with efficient performance, sleek design, responsive display, and ample storage, perfect for study, work, online classes, and daily computing.',
-    price: 12999, image: 'https://www.globalbrand.com.bd/image/cache/catalog/LAPTOP/Acer/Acer-One-Z14-52M-12th-Gen-Core-i5-Laptop-1-1200x1200.jpg',
-    category: 'ACER', rating: 4.7, reviews: 94,
-  },
-  {
-    id: 8, name: 'DELL LATITUDE 5520',
-    description: 'Dell Latitude 5520 – Premium 15.6-inch business laptop delivering reliable performance, smooth multitasking, fast SSD storage, and a durable professional design, ideal for office work, coding, and productivity.',
-    fullDescription: 'Dell Latitude 5520 – Powerful and versatile business laptop with a large 15.6-inch display, responsive performance, fast storage, and professional build, perfect for work, study, and everyday computing.',
-    price: 31999, image: dellLaptopImage,
-    category: 'DELL', rating: 4.9, reviews: 61, badge: 'Exclusive',
-  },
-  {
-    id: 9, name: 'LENOVO THINKPAD L450',
-    description: 'Lenovo ThinkPad L450 – Reliable 14-inch business laptop with a durable ThinkPad design, smooth everyday performance, comfortable keyboard, and excellent portability, ideal for office work, study, and productivity.',
-    fullDescription: 'Lenovo ThinkPad L450 – Compact and dependable laptop featuring a business-class build, responsive performance, classic ThinkPad keyboard, and portable 14-inch design, perfect for work, coding, study, and daily use.',
-    price: 12499, image: 'https://i.pinimg.com/736x/f2/b6/9b/f2b69b23313b68146c66dc888dc90fa2.jpg',
-    category: 'LENOVO', rating: 4.9, reviews: 61, badge: 'Exclusive',
-  },
 ];
 
 const fmt = (n: number) => `₹${n.toLocaleString('en-IN')}`;
@@ -181,7 +93,7 @@ function Header({
           {/* Desktop Nav */}
           <nav className="hidden md:flex flex-1 justify-center items-center gap-12">
             {navItems.map(({ key, label }) => (
-              <button key={key} onClick={() => navigate(key)}
+              <button key={key} aria-current={page === key ? 'page' : undefined} onClick={() => navigate(key)}
                 className={`relative text-[15px] font-medium pb-2 transition-colors ${page === key ? 'text-white' : 'text-gray-300 hover:text-white'}`}>
                 {label}
                 {page === key && (
@@ -200,18 +112,18 @@ function Header({
                   <svg className="w-4 h-4 text-gray-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
-                  <input autoFocus type="text" placeholder="Search..."
+                  <input autoFocus type="text" placeholder="Search..." aria-label="Search products"
                     value={searchQuery}
                     onChange={(e) => { setSearchQuery(e.target.value); if (e.target.value) setPage('products'); }}
                     className="text-sm outline-none bg-transparent text-white placeholder:text-gray-500 w-40" />
-                  <button onClick={() => { setShowSearch(false); setSearchQuery(''); }} className="text-gray-400 hover:text-white transition-colors">
+                  <button type="button" aria-label="Close search" onClick={() => { setShowSearch(false); setSearchQuery(''); }} className="text-gray-400 hover:text-white transition-colors">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
               ) : (
-                <button onClick={() => setShowSearch(true)} className="p-2 text-gray-300 hover:text-white transition-all">
+                <button type="button" aria-label="Search products" onClick={() => setShowSearch(true)} className="p-2 text-gray-300 hover:text-white transition-all">
                   <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
@@ -613,7 +525,7 @@ function MiniProductCard({ product, onViewProduct }: { product: Product; onViewP
           </div>
           <button onClick={onViewProduct}
             className="text-xs font-semibold text-gold hover:text-navy transition-colors">
-            View →
+            Browse →
           </button>
         </div>
       </div>
@@ -675,7 +587,9 @@ function FormField({ id, label, type = 'text', placeholder, value, error, touche
   return (
     <div>
       <label htmlFor={id} className="block text-sm font-medium text-navy mb-1.5">{label}</label>
-      <input id={id} type={type} placeholder={placeholder} value={value}
+      <input id={id} type={type} placeholder={placeholder} value={value} required
+        aria-invalid={hasErr}
+        aria-describedby={hasErr ? `${id}-error` : undefined}
         onChange={(e) => onChange(e.target.value)} onBlur={onBlur}
         className="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-colors focus:ring-2"
         style={{
@@ -685,7 +599,7 @@ function FormField({ id, label, type = 'text', placeholder, value, error, touche
         }}
       />
       {hasErr && (
-        <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
+        <p id={`${id}-error`} className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
           <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
           {error}
         </p>
@@ -786,7 +700,9 @@ function LoginForm({ product, onSubmit, onBack }: {
                 onChange={(v) => handleChange('email', v)} onBlur={() => handleBlur('email')} />
               <div>
                 <label htmlFor="district" className="block text-sm font-medium text-navy mb-1.5">District</label>
-                <select id="district" value={form.district}
+                <select id="district" value={form.district} required
+                  aria-invalid={!!(touched.district && errors.district)}
+                  aria-describedby={touched.district && errors.district ? 'district-error' : undefined}
                   onChange={(e) => handleChange('district', e.target.value)}
                   onBlur={() => handleBlur('district')}
                   className="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-all appearance-none bg-white"
@@ -802,7 +718,7 @@ function LoginForm({ product, onSubmit, onBack }: {
                   {DISTRICTS.map((d) => <option key={d} value={d}>{d}</option>)}
                 </select>
                 {touched.district && errors.district && (
-                  <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
+                  <p id="district-error" className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
                     <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
                     {errors.district}
                   </p>
@@ -814,7 +730,7 @@ function LoginForm({ product, onSubmit, onBack }: {
               </button>
             </form>
             <p className="text-muted text-xs text-center mt-4">
-              Your information is used only to process your order. We never share your data.
+              Your details will be included in a WhatsApp message to Seconds Digital and are not saved on this website.
             </p>
           </div>
         </div>
@@ -831,18 +747,49 @@ function AccessLogin({ onUserLogin, onAdminLogin, onClose }: {
   const [mode, setMode] = useState<'user' | 'admin'>('user');
   const [form, setForm] = useState({ fullName: '', phone: '', email: '', district: '', password: '' });
   const [error, setError] = useState('');
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (event.key !== 'Tab' || !dialogRef.current) return;
+
+      const focusable = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])',
+      ));
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    dialogRef.current?.querySelector<HTMLElement>('input, select')?.focus();
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     setError('');
 
     if (mode === 'admin') {
-      onAdminLogin(form.email, form.password).then((message) => { if (message) setError(message); });
+      void onAdminLogin(form.email, form.password)
+        .then((message) => { if (message) setError(message); })
+        .catch(() => setError('Unable to reach the admin service. Check the API connection and try again.'));
       return;
     }
 
-    if (!form.fullName.trim() || !/^[6-9]\d{9}$/.test(form.phone) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) || !form.district) {
-      setError('Please complete your name, valid phone, email, and district.');
+    if (form.fullName.trim().length < 3 || !/^[6-9]\d{9}$/.test(form.phone) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) || !form.district) {
+      setError('Enter a name with at least 3 characters, a valid 10-digit Indian phone number, a valid email, and your district.');
       return;
     }
 
@@ -853,12 +800,12 @@ function AccessLogin({ onUserLogin, onAdminLogin, onClose }: {
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-navy/60 px-4 py-8 backdrop-blur-sm" onMouseDown={onClose}>
-      <div className="w-full max-w-md rounded-3xl bg-cream p-6 shadow-2xl sm:p-8" onMouseDown={(event) => event.stopPropagation()}>
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="access-login-title" className="w-full max-w-md rounded-3xl bg-cream p-6 shadow-2xl sm:p-8" onMouseDown={(event) => event.stopPropagation()}>
         <div className="mb-6 flex items-start justify-between gap-4">
           <div>
             <span className="text-xs font-medium uppercase tracking-widest text-gold">Seconds Digital</span>
-            <h2 className="mt-2 font-display text-3xl font-semibold text-navy">Welcome back</h2>
-            <p className="mt-1 text-sm text-muted">Choose the account you want to access.</p>
+            <h2 id="access-login-title" className="mt-2 font-display text-3xl font-semibold text-navy">Account access</h2>
+            <p className="mt-1 text-sm text-muted">Continue with customer details or sign in to the admin dashboard.</p>
           </div>
           <button type="button" onClick={onClose} className="rounded-full p-2 text-muted hover:bg-cream-dark hover:text-navy" aria-label="Close login">
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M6 6l12 12M18 6L6 18" /></svg>
@@ -867,9 +814,9 @@ function AccessLogin({ onUserLogin, onAdminLogin, onClose }: {
 
         <div className="mb-6 grid grid-cols-2 rounded-xl bg-cream-dark p-1">
           {(['user', 'admin'] as const).map((accountMode) => (
-            <button key={accountMode} type="button" onClick={() => { setMode(accountMode); setError(''); }}
+            <button key={accountMode} type="button" aria-pressed={mode === accountMode} onClick={() => { setMode(accountMode); setError(''); }}
               className={`rounded-lg py-2.5 text-sm font-semibold capitalize transition-colors ${mode === accountMode ? 'bg-navy text-cream shadow-sm' : 'text-muted hover:text-navy'}`}>
-              {accountMode} login
+              {accountMode === 'user' ? 'Customer details' : 'Admin login'}
             </button>
           ))}
         </div>
@@ -877,24 +824,24 @@ function AccessLogin({ onUserLogin, onAdminLogin, onClose }: {
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === 'user' ? (
             <>
-              <input required value={form.fullName} onChange={(event) => update('fullName', event.target.value)} placeholder="Full name" className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-gold" />
-              <input required value={form.phone} onChange={(event) => update('phone', event.target.value)} placeholder="10-digit phone number" type="tel" className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-gold" />
-              <input required value={form.email} onChange={(event) => update('email', event.target.value)} placeholder="Email address" type="email" className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-gold" />
-              <select required value={form.district} onChange={(event) => update('district', event.target.value)} className="w-full appearance-none rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-gold">
+              <input required aria-label="Full name" value={form.fullName} onChange={(event) => update('fullName', event.target.value)} placeholder="Full name" className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-gold" />
+              <input required aria-label="10-digit Indian phone number" value={form.phone} onChange={(event) => update('phone', event.target.value)} placeholder="10-digit phone number" type="tel" className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-gold" />
+              <input required aria-label="Email address" value={form.email} onChange={(event) => update('email', event.target.value)} placeholder="Email address" type="email" className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-gold" />
+              <select required aria-label="District" value={form.district} onChange={(event) => update('district', event.target.value)} className="w-full appearance-none rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-gold">
                 <option value="">Select your district</option>
                 {DISTRICTS.map((district) => <option key={district} value={district}>{district}</option>)}
               </select>
             </>
           ) : (
             <>
-              <input required value={form.email} onChange={(event) => update('email', event.target.value)} placeholder="Admin email" type="email" className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-gold" />
-              <input required value={form.password} onChange={(event) => update('password', event.target.value)} placeholder="Admin password" type="password" className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-gold" />
+              <input required aria-label="Admin email" value={form.email} onChange={(event) => update('email', event.target.value)} placeholder="Admin email" type="email" className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-gold" />
+              <input required aria-label="Admin password" value={form.password} onChange={(event) => update('password', event.target.value)} placeholder="Admin password" type="password" className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-gold" />
               <p className="text-xs text-muted">Use the administrator credentials configured on the server.</p>
             </>
           )}
-          {error && <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}
+          {error && <p role="alert" className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}
           <button type="submit" className="w-full rounded-xl bg-navy py-3.5 text-sm font-semibold text-cream transition-colors hover:bg-navy-hover">
-            Continue as {mode === 'admin' ? 'Admin' : 'User'}
+            {mode === 'admin' ? 'Sign in as Admin' : 'Continue as Customer'}
           </button>
         </form>
       </div>
@@ -910,6 +857,7 @@ function AdminPage() {
   const [dashboard, setDashboard] = useState<AdminDashboard | null>(null);
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: '', description: '', price: '', original_price: '', image: '', category: 'Laptop', stock_quantity: '1' });
@@ -926,7 +874,9 @@ function AdminPage() {
       setDashboard(await dashboardResponse.json());
       setProducts((await productsResponse.json()).products);
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : 'Unable to load admin data.');
+      setError(loadError instanceof TypeError
+        ? 'Unable to reach the admin service. Check the API connection and try again.'
+        : loadError instanceof Error ? loadError.message : 'Unable to load admin data.');
     } finally { setLoading(false); }
   };
 
@@ -935,37 +885,74 @@ function AdminPage() {
   const createProduct = async (event: FormEvent) => {
     event.preventDefault();
     setError('');
-    const response = await fetch('/api/admin/products', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, price: Number(form.price), original_price: form.original_price ? Number(form.original_price) : null, stock_quantity: Number(form.stock_quantity) }) });
-    const body = await response.json();
-    if (!response.ok) { setError(body.error || 'Unable to create product.'); return; }
-    setProducts((current) => [body.product, ...current]);
-    setShowForm(false);
-    setForm({ name: '', description: '', price: '', original_price: '', image: '', category: 'Laptop', stock_quantity: '1' });
-    void load();
+    setNotice('');
+    try {
+      const response = await fetch('/api/admin/products', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, price: Number(form.price), original_price: form.original_price ? Number(form.original_price) : null, stock_quantity: Number(form.stock_quantity) }) });
+      const body = await response.json();
+      if (!response.ok) { setError(body.error || 'Unable to create product.'); return; }
+      setProducts((current) => [body.product, ...current]);
+      setShowForm(false);
+      setForm({ name: '', description: '', price: '', original_price: '', image: '', category: 'Laptop', stock_quantity: '1' });
+      setNotice('Product added.');
+      void load();
+    } catch {
+      setError('Unable to reach the admin service. Check the API connection and try again.');
+    }
   };
 
   const archiveProduct = async (id: number) => {
     if (!window.confirm('Archive this product?')) return;
-    const response = await fetch(`/api/admin/products/${id}`, { method: 'DELETE' });
-    if (!response.ok) { setError('Unable to archive product.'); return; }
-    setProducts((current) => current.filter((product) => product.id !== id));
-    void load();
+    setError('');
+    setNotice('');
+    try {
+      const response = await fetch(`/api/admin/products/${id}`, { method: 'DELETE' });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        setError(body.error || 'Unable to archive product.');
+        return;
+      }
+      setProducts((current) => current.filter((product) => product.id !== id));
+      setNotice('Product archived.');
+      void load();
+    } catch {
+      setError('Unable to reach the admin service. Check the API connection and try again.');
+    }
   };
 
-  const logout = async () => { await fetch('/api/admin/auth/logout', { method: 'POST' }); window.location.assign('/'); };
+  const logout = async () => {
+    try {
+      const response = await fetch('/api/admin/auth/logout', { method: 'POST' });
+      if (!response.ok) throw new Error('Logout failed.');
+      window.location.assign(import.meta.env.BASE_URL);
+    } catch {
+      setError('Unable to sign out. Check the admin service connection and try again.');
+    }
+  };
   const money = (value: number) => `₹${value.toLocaleString('en-IN')}`;
 
   if (loading) return <div className="flex min-h-screen items-center justify-center bg-cream text-muted">Verifying administrator session...</div>;
-  if (!admin) return <div className="flex min-h-screen items-center justify-center bg-cream px-4"><div className="rounded-2xl bg-white p-8 text-center shadow-sm"><h1 className="font-display text-3xl font-semibold text-navy">Admin access required</h1><p className="mt-2 text-muted">{error || 'Please return to the storefront and choose Admin login.'}</p><a href="/" className="mt-6 inline-block rounded-full bg-navy px-5 py-3 text-sm font-semibold text-cream">Return to website</a></div></div>;
+  if (!admin) return <div className="flex min-h-screen items-center justify-center bg-cream px-4"><div className="rounded-2xl bg-white p-8 text-center shadow-sm"><h1 className="font-display text-3xl font-semibold text-navy">Admin access required</h1><p className="mt-2 text-muted">{error || 'Please return to the storefront and choose Admin login.'}</p><a href={import.meta.env.BASE_URL} className="mt-6 inline-block rounded-full bg-navy px-5 py-3 text-sm font-semibold text-cream">Return to website</a></div></div>;
 
   return <div className="min-h-screen bg-cream text-navy">
     <header className="border-b border-border bg-white"><div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8"><div><p className="text-xs font-semibold uppercase tracking-widest text-gold">Seconds Digital</p><h1 className="font-display text-2xl font-semibold">Admin dashboard</h1></div><div className="flex items-center gap-3"><span className="hidden text-sm text-muted sm:block">{admin.email}</span><button onClick={logout} className="rounded-full border border-border px-4 py-2 text-sm font-semibold hover:bg-cream-dark">Log out</button></div></div></header>
     <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
-      {error && <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
+      {error && <div role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
+      {notice && <div role="status" className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-800">{notice}</div>}
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">{dashboard && Object.entries({ Revenue: money(dashboard.metrics.revenue), Orders: dashboard.metrics.orders, Users: dashboard.metrics.users, Products: dashboard.metrics.products, Visitors: dashboard.metrics.visitors }).map(([label, value]) => <div key={label} className="rounded-2xl border border-border bg-white p-5"><p className="text-xs uppercase tracking-wider text-muted">{label}</p><p className="mt-3 font-display text-3xl font-semibold">{value}</p></div>)}</section>
-      <section className="rounded-2xl border border-border bg-white"><div className="flex items-center justify-between border-b border-border px-5 py-4"><div><h2 className="font-display text-2xl font-semibold">Products</h2><p className="text-sm text-muted">Live records from the SQLite database.</p></div><button onClick={() => setShowForm(!showForm)} className="rounded-full bg-navy px-4 py-2 text-sm font-semibold text-cream">{showForm ? 'Close' : 'Add product'}</button></div>
-        {showForm && <form onSubmit={createProduct} className="grid gap-3 border-b border-border bg-cream p-5 sm:grid-cols-2"><input required placeholder="Product name" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} className="rounded-xl border border-border bg-white px-3 py-2 text-sm" /><input required type="number" min="0" placeholder="Price" value={form.price} onChange={(event) => setForm({ ...form, price: event.target.value })} className="rounded-xl border border-border bg-white px-3 py-2 text-sm" /><input placeholder="Category" value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })} className="rounded-xl border border-border bg-white px-3 py-2 text-sm" /><input required type="number" min="0" placeholder="Stock quantity" value={form.stock_quantity} onChange={(event) => setForm({ ...form, stock_quantity: event.target.value })} className="rounded-xl border border-border bg-white px-3 py-2 text-sm" /><input placeholder="Image URL" value={form.image} onChange={(event) => setForm({ ...form, image: event.target.value })} className="rounded-xl border border-border bg-white px-3 py-2 text-sm sm:col-span-2" /><textarea placeholder="Description" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} className="rounded-xl border border-border bg-white px-3 py-2 text-sm sm:col-span-2" /><button className="rounded-xl bg-gold px-4 py-3 text-sm font-semibold sm:col-span-2">Save product</button></form>}
-        <div className="overflow-x-auto"><table className="w-full min-w-[680px] text-left text-sm"><thead className="bg-cream-dark text-xs uppercase tracking-wider text-muted"><tr><th className="px-5 py-3">Product</th><th className="px-5 py-3">Category</th><th className="px-5 py-3">Price</th><th className="px-5 py-3">Stock</th><th className="px-5 py-3 text-right">Action</th></tr></thead><tbody>{products.length ? products.map((product) => <tr key={product.id} className="border-t border-border"><td className="px-5 py-4 font-semibold">{product.name}</td><td className="px-5 py-4 text-muted">{product.category}</td><td className="px-5 py-4">{money(product.price)}</td><td className="px-5 py-4">{product.stock_quantity}</td><td className="px-5 py-4 text-right"><button onClick={() => archiveProduct(product.id)} className="text-sm font-semibold text-red-600">Archive</button></td></tr>) : <tr><td colSpan={5} className="px-5 py-10 text-center text-muted">No products in the database.</td></tr>}</tbody></table></div>
+      <section className="rounded-2xl border border-border bg-white"><div className="flex items-center justify-between border-b border-border px-5 py-4"><div><h2 className="font-display text-2xl font-semibold">Products</h2><p className="text-sm text-muted">Live records from the SQLite database.</p></div><button type="button" aria-expanded={showForm} aria-controls="admin-product-form" onClick={() => setShowForm(!showForm)} className="rounded-full bg-navy px-4 py-2 text-sm font-semibold text-cream">{showForm ? 'Close' : 'Add product'}</button></div>
+        {showForm && (
+          <form id="admin-product-form" onSubmit={createProduct} className="grid gap-3 border-b border-border bg-cream p-5 sm:grid-cols-2">
+            <input required aria-label="Product name" placeholder="Product name" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} className="rounded-xl border border-border bg-white px-3 py-2 text-sm" />
+            <input required aria-label="Price" type="number" min="0" placeholder="Price" value={form.price} onChange={(event) => setForm({ ...form, price: event.target.value })} className="rounded-xl border border-border bg-white px-3 py-2 text-sm" />
+            <input aria-label="Original price" type="number" min="0" placeholder="Original price (optional)" value={form.original_price} onChange={(event) => setForm({ ...form, original_price: event.target.value })} className="rounded-xl border border-border bg-white px-3 py-2 text-sm" />
+            <input aria-label="Category" placeholder="Category" value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })} className="rounded-xl border border-border bg-white px-3 py-2 text-sm" />
+            <input required aria-label="Stock quantity" type="number" min="0" placeholder="Stock quantity" value={form.stock_quantity} onChange={(event) => setForm({ ...form, stock_quantity: event.target.value })} className="rounded-xl border border-border bg-white px-3 py-2 text-sm" />
+            <input aria-label="Image URL" placeholder="Image URL" value={form.image} onChange={(event) => setForm({ ...form, image: event.target.value })} className="rounded-xl border border-border bg-white px-3 py-2 text-sm sm:col-span-2" />
+            <textarea aria-label="Description" placeholder="Description" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} className="rounded-xl border border-border bg-white px-3 py-2 text-sm sm:col-span-2" />
+            <button type="submit" className="rounded-xl bg-gold px-4 py-3 text-sm font-semibold sm:col-span-2">Save product</button>
+          </form>
+        )}
+        <div className="overflow-x-auto"><table className="w-full min-w-[680px] text-left text-sm"><thead className="bg-cream-dark text-xs uppercase tracking-wider text-muted"><tr><th className="px-5 py-3">Product</th><th className="px-5 py-3">Category</th><th className="px-5 py-3">Price</th><th className="px-5 py-3">Stock</th><th className="px-5 py-3 text-right">Action</th></tr></thead><tbody>{products.length ? products.map((product) => <tr key={product.id} className="border-t border-border"><td className="px-5 py-4 font-semibold">{product.name}</td><td className="px-5 py-4 text-muted">{product.category}</td><td className="px-5 py-4">{money(product.price)}</td><td className="px-5 py-4">{product.stock_quantity}</td><td className="px-5 py-4 text-right"><button type="button" aria-label={`Archive ${product.name}`} onClick={() => archiveProduct(product.id)} className="text-sm font-semibold text-red-600">Archive</button></td></tr>) : <tr><td colSpan={5} className="px-5 py-10 text-center text-muted">No products in the database.</td></tr>}</tbody></table></div>
       </section>
       <section className="rounded-2xl border border-border bg-white"><div className="border-b border-border px-5 py-4"><h2 className="font-display text-2xl font-semibold">Recent orders</h2></div><div className="overflow-x-auto"><table className="w-full min-w-[680px] text-left text-sm"><thead className="bg-cream-dark text-xs uppercase tracking-wider text-muted"><tr><th className="px-5 py-3">Order</th><th className="px-5 py-3">Customer</th><th className="px-5 py-3">Value</th><th className="px-5 py-3">Status</th></tr></thead><tbody>{dashboard?.recentOrders.length ? dashboard.recentOrders.map((order) => <tr key={order.id} className="border-t border-border"><td className="px-5 py-4">#{order.id}</td><td className="px-5 py-4">{order.full_name || order.email || 'Guest'}</td><td className="px-5 py-4">{money(order.total_amount)}</td><td className="px-5 py-4 capitalize">{order.status}</td></tr>) : <tr><td colSpan={4} className="px-5 py-10 text-center text-muted">No orders recorded yet.</td></tr>}</tbody></table></div></section>
     </main>
@@ -982,7 +969,7 @@ function ProductDetail({ product, user, onBack }: {
       `*${product.name}*\nPrice: ${fmt(product.price)}\nCategory: ${product.category}\n\n` +
       `My details:\nName: ${user.fullName}\nPhone: ${user.phone}\nEmail: ${user.email}\nDistrict: ${user.district}, Tamil Nadu\n\nPlease confirm availability and delivery details. Thank you!`
     );
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -1154,7 +1141,7 @@ function ProductsPage({ user, setUser, searchQuery, setSearchQuery }: {
             <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
-            <input type="text" placeholder="Search by laptop name…"
+            <input type="text" placeholder="Search by laptop name…" aria-label="Search products by laptop name"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-11 pr-10 py-3 bg-white border border-border rounded-full text-sm outline-none text-navy placeholder:text-muted"
@@ -1163,7 +1150,7 @@ function ProductsPage({ user, setUser, searchQuery, setSearchQuery }: {
               onBlur={(e) => { e.target.style.borderColor = '#E2DDD5'; e.target.style.boxShadow = 'none'; }}
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery('')}
+              <button type="button" aria-label="Clear product search" onClick={() => setSearchQuery('')}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-navy transition-colors">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1532,7 +1519,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAccessLogin, setShowAccessLogin] = useState(false);
 
-  if (window.location.pathname.startsWith('/admin')) return <AdminPage />;
+  if (window.location.pathname.startsWith(`${import.meta.env.BASE_URL}admin`)) return <AdminPage />;
 
   const handleLoginClick = () => {
     setShowAccessLogin(true);
@@ -1573,7 +1560,7 @@ export default function App() {
         <AccessLogin
           onClose={() => setShowAccessLogin(false)}
           onUserLogin={(loggedInUser) => { setUser(loggedInUser); setShowAccessLogin(false); }}
-          onAdminLogin={async (email, password) => { const response = await fetch('/api/admin/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) }); if (!response.ok) return (await response.json()).error || 'Admin login failed.'; setShowAccessLogin(false); window.location.assign('/admin'); return null; }}
+          onAdminLogin={async (email, password) => { const response = await fetch('/api/admin/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) }); if (!response.ok) return (await response.json()).error || 'Admin login failed.'; setShowAccessLogin(false); window.location.assign(`${import.meta.env.BASE_URL}admin`); return null; }}
         />
       )}
     </div>

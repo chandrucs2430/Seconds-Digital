@@ -1,6 +1,13 @@
 # Seconds Digital
 
-Seconds Digital is a storefront and admin tool for a laptop sales, repair, and servicing business in Somarasampettai, Tiruchirappalli. The frontend is a React single-page app; the local API uses Express and SQLite.
+Seconds Digital is a storefront and admin tool for a laptop sales, repair, and servicing business in Somarasampettai, Tiruchirappalli. The frontend is a React single-page app; the API uses Express and SQLite.
+
+## Tech Stack
+
+- React 19 and TypeScript
+- Vite 8 with Tailwind CSS 4
+- Express 5, SQLite (`better-sqlite3`), and JWT-backed admin sessions
+- npm scripts and lockfile; Node.js 20 is recommended
 
 ## Features
 
@@ -8,9 +15,9 @@ Seconds Digital is a storefront and admin tool for a laptop sales, repair, and s
 - Customer detail form and product detail view, with order enquiries handed off to WhatsApp.
 - About, contact, and customer review summary pages.
 - Admin sign-in, dashboard metrics, product creation and archiving, and order listing.
-- Local SQLite storage for admin, customer, product, order, and visitor-event records; uploaded product images are served from `/uploads`.
+- SQLite-backed administrator and product management, with uploaded product images served from `/uploads`.
 
-The public storefront currently reads its nine products from `src/App.tsx`. Admin-created products are stored in SQLite and are not yet shown in the public catalog. Orders are initiated through WhatsApp; the API does not create an order record from that flow.
+The public storefront reads its nine products from `src/data/products.ts`. Admin-created products are stored in SQLite and are not yet shown in the public catalog. The database schema also defines customer, order, and visitor-event tables, but the current storefront does not populate them: customer details are included in the WhatsApp handoff, and orders are not recorded by the API.
 
 ## Requirements
 
@@ -18,9 +25,7 @@ The public storefront currently reads its nine products from `src/App.tsx`. Admi
 - npm, included with Node.js.
 - A modern browser. Internet access is needed for Google Fonts and product photos hosted by third parties.
 
-Open the repository root as the workspace in VS Code. For Claude Code, start the session from the repository root and review `AGENTS.md` before making changes; it describes the app's framework and existing development-server setup. In either environment, run the commands below from the repository root.
-
-Use npm for installation and scripts: `package-lock.json`, `run-dev.cmd`, and the VS Code tasks use npm. The repository also contains pnpm workspace/lock metadata; avoid mixing package managers or regenerating the npm lockfile with pnpm unless the project is intentionally migrated. From the VS Code terminal:
+Use npm for installation and scripts. `package-lock.json`, `run-dev.cmd`, and the VS Code tasks use npm. The repository also contains pnpm workspace/lock metadata; do not regenerate one lockfile with a different package manager. From the repository root, run:
 
 ```powershell
 node --version
@@ -77,29 +82,41 @@ Available checks and build commands:
 npm run typecheck
 npm run build
 npm run preview
+node --check login-check.mjs
 ```
 
-There are currently no configured lint or automated test scripts. Preview serves the production frontend and proxies API/upload requests to `API_PORT`; start `npm run dev:api` in another terminal before testing admin features in preview. A production deployment must provide an API process, HTTPS, and equivalent `/api` and `/uploads` routing.
+There are no configured lint or automated test scripts. `login-check.mjs` is a manual API login check and requires `ADMIN_EMAIL` and `ADMIN_PASSWORD` in the environment. Preview serves the production frontend and proxies API/upload requests to `API_PORT`; start `npm run dev:api` in another terminal before testing admin features in preview.
+
+## Deployment
+
+The workflow at `.github/workflows/deploy.yml` builds and deploys the static frontend to GitHub Pages on pushes to `main` and on manual dispatch. The production base path is `/Seconds-Digital/`; update `vite.config.mts` if the repository is deployed under a different path.
+
+GitHub Pages does not run the Express API. The storefront's WhatsApp handoff works independently, but admin login, product management, and uploaded images require a separately hosted API with HTTPS, persistent SQLite and upload storage, and `/api` and `/uploads` routing to that API. Configure the same environment variables documented above on the API host. The Pages workflow does not deploy or configure this backend.
 
 ## Project Map
 
 | Path | Contents |
 | --- | --- |
-| `src/App.tsx` | Storefront pages, product data, customer flows, and admin UI. |
+| `src/App.tsx` | Storefront pages, customer flows, and admin UI. |
+| `src/data/products.ts` | Hardcoded storefront catalog and product type. |
 | `src/main.tsx` | React entry point. |
 | `src/index.css` | Tailwind CSS v4 import, fonts, theme tokens, and global styles. |
 | `server/index.mjs` | Express API, SQLite schema, admin authentication, and image upload handling. |
 | `scripts/dev.mjs` | Starts and manages the API and Vite as one development command. |
-| `public/assets/` | Local storefront background image. |
-| `public/uploads/` | Product image uploads; created if missing. |
-| `data/seconds-digital.sqlite` | SQLite database used and migrated by the API; a database file is already tracked in this workspace. |
+| `public/` | Storefront logo, hero image, and runtime product uploads. |
+| `DELL.jpg`, `a_realiastic_drone_shot_of_tri.mp4` | Locally imported storefront media. |
+| `data/seconds-digital.sqlite` | Tracked SQLite database used and migrated by the API. |
 | `vite.config.mts` | Vite, Tailwind, aliases, ports, and API proxies. |
 | `index.html` | Browser metadata and SPA mount point. |
+| `Adminlogin.html` | Legacy redirect to the admin route. |
+| `login-check.mjs` | Manual API authentication check. |
 | `.env.example` | Safe template containing variable names but no credentials. |
+| `.mise.toml` | Recommended Node.js version. |
+| `.github/workflows/deploy.yml` | GitHub Pages frontend deployment workflow. |
 
 The storefront logo and hero background are served locally. Product photos for most hardcoded products and the Fraunces, Outfit, and Caveat fonts are loaded from external hosts, so those assets require network access. Replace them with properly licensed local assets if offline use is required.
 
-The WhatsApp order number is the `WHATSAPP_NUMBER` constant near the top of `src/App.tsx`; the WhatsApp, map, Instagram, and YouTube contact URLs are configured in `AboutPage` in the same file. Product names, pricing, descriptions, and image sources are in the `PRODUCTS` array there. Confirm these business details and third-party asset rights before publishing.
+The WhatsApp order number and contact/social URLs are configured in `src/App.tsx`; product names, pricing, descriptions, and image sources are in `src/data/products.ts`. Confirm business details and third-party asset rights before publishing.
 
 The API stores its database in `data/` and uploads in `public/uploads/` when those directories are writable. If the workspace is read-only, it falls back to an `seconds-digital-website` directory under the operating system's temporary directory; that fallback data may not be persistent.
 
@@ -119,3 +136,11 @@ The API stores its database in `data/` and uploads in `public/uploads/` when tho
 - WhatsApp is an external order handoff; no payment processing or server-side order creation is implemented.
 - Admin credentials must be configured manually. No default credentials are provided.
 - Production deployment, database backup policy, and external service credentials/ownership remain operator responsibilities.
+
+## Contributing
+
+Keep changes focused and preserve the existing React/Vite/Express stack. Use npm, avoid committing `.env` files or real customer data, and run `npm run typecheck` and `npm run build` before submitting changes. There is no separate contribution policy or automated test suite at this time.
+
+## License
+
+No license has been selected for this repository, and no `LICENSE` file is present. The repository owner must choose a license after confirming ownership and redistribution rights for the source code and included assets. Until then, reuse and redistribution permissions are not granted by this repository.
