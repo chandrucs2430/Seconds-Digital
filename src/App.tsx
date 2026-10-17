@@ -83,7 +83,17 @@ function Header({
           {/* Logo */}
           <button onClick={() => navigate('landing')}
             className="flex items-center gap-3 shrink-0">
-            <img src={`${import.meta.env.BASE_URL}seconds-digital-logo.jpg`} alt="Seconds Digital" className="w-12 h-12 object-contain rounded-full" />
+            <img
+              src={`${import.meta.env.BASE_URL}seconds-digital-logo.jpg`}
+              alt="Seconds Digital"
+              className="w-12 h-12 object-contain rounded-full shadow-sm"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (!target.src.includes('Logo.jpg')) {
+                  target.src = `${import.meta.env.BASE_URL}Logo.jpg`;
+                }
+              }}
+            />
             <div className="text-left hidden sm:block">
               <div className="font-display text-white font-semibold text-xl tracking-tight leading-none">Seconds Digital</div>
               <div className="text-gray-400 text-[10px] tracking-[0.2em] mt-1 uppercase">Branded Laptops</div>
