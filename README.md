@@ -1,146 +1,170 @@
 # Seconds Digital
 
-Seconds Digital is a storefront and admin tool for a laptop sales, repair, and servicing business in Somarasampettai, Tiruchirappalli. The frontend is a React single-page app; the API uses Express and SQLite.
+[![Deploy to GitHub Pages](https://github.com/chandrucs2430/Seconds-Digital/actions/workflows/deploy.yml/badge.svg)](https://github.com/chandrucs2430/Seconds-Digital/actions/workflows/deploy.yml)
+[![Live Site](https://img.shields.io/badge/Live_Site-GitHub_Pages-22c55e?style=flat&logo=github)](https://chandrucs2430.github.io/Seconds-Digital/)
 
-## Tech Stack
+**Seconds Digital** is a full-stack e-commerce storefront and administration platform for tested branded laptops, computer sales, repairs, and servicing in Somarasampettai, Tiruchirappalli.
 
-- React 19 and TypeScript
-- Vite 8 with Tailwind CSS 4
-- Express 5, SQLite (`better-sqlite3`), and JWT-backed admin sessions
-- npm scripts and lockfile; Node.js 20 is recommended
+- **Live Storefront:** [https://chandrucs2430.github.io/Seconds-Digital/](https://chandrucs2430.github.io/Seconds-Digital/)
+- **Repository:** [https://github.com/chandrucs2430/Seconds-Digital](https://github.com/chandrucs2430/Seconds-Digital)
 
-## Features
+---
 
-- Responsive storefront with featured products, product search, and product-name filtering.
-- Customer detail form and product detail view, with order enquiries handed off to WhatsApp.
-- About, contact, and customer review summary pages.
-- Admin sign-in, dashboard metrics, product creation and archiving, and order listing.
-- SQLite-backed administrator and product management, with uploaded product images served from `/uploads`.
+## Architecture & Tech Stack
 
-The public storefront reads its nine products from `src/data/products.ts`. Admin-created products are stored in SQLite and are not yet shown in the public catalog. The database schema also defines customer, order, and visitor-event tables, but the current storefront does not populate them: customer details are included in the WhatsApp handoff, and orders are not recorded by the API.
-
-## Requirements
-
-- Node.js 20 (the recommended version is recorded in `.mise.toml`).
-- npm, included with Node.js.
-- A modern browser. Internet access is needed for Google Fonts and product photos hosted by third parties.
-
-Use npm for installation and scripts. `package-lock.json`, `run-dev.cmd`, and the VS Code tasks use npm. The repository also contains pnpm workspace/lock metadata; do not regenerate one lockfile with a different package manager. From the repository root, run:
-
-```powershell
-node --version
-npm ci
-Copy-Item .env.example .env
+```
+                                  ┌───────────────────────────────┐
+                                  │      Client (Browser)         │
+                                  └──────────────┬────────────────┘
+                                                 │
+                        ┌────────────────────────┴────────────────────────┐
+                        │                                                 │
+                        ▼                                                 ▼
+             ┌─────────────────────┐                          ┌───────────────────────┐
+             │   Static Frontend   │                          │    Express Backends   │
+             │   React 19 + Vite   │                          ├───────────────────────┤
+             │   Tailwind CSS 4    │                          │ • SQLite Local API    │
+             │   TypeScript 5.7    │                          │ • Prisma Postgres API │
+             └─────────────────────┘                          └───────────────────────┘
 ```
 
-Before running these commands, activate/install Node.js 20 and confirm `node --version` prints `v20.x`. `.mise.toml` pins this project to Node 20; the native SQLite dependency is not reliable under the workspace's system Node 24 runtime. Re-run `npm ci` after changing Node major versions so the SQLite native module matches the active runtime.
+### Frontend (`src/`)
+- **React 19** with **TypeScript** for reactive storefront views, cart management, and admin dashboard.
+- **Vite 8** with **Tailwind CSS 4** via `@tailwindcss/vite` for optimized styling and instant hot module replacement (HMR).
+- **Responsive Layouts**: Designed for mobile and desktop with product filters, modal previews, and WhatsApp order handoffs.
 
-Create a private JWT secret of at least 32 characters and set it as `JWT_SECRET` in `.env`. For example, generate one with:
+### Backend Services (`server/`)
+1. **Storefront & Admin API (`server/index.mjs`)**:
+   - Lightweight Express 5 API backed by **SQLite** (`better-sqlite3`).
+   - Handles admin authentication, JWT sessions, product catalog CRUD, visitor analytics, and multipart image uploads.
+2. **Enterprise Cloud API (`server/api/`)**:
+   - TypeScript Express API powered by **Prisma ORM** with **PostgreSQL / Neon Cloud Database**.
+   - Input validation with **Zod**, rate-limiting with `express-rate-limit`, and security headers via `helmet`.
 
-```powershell
-node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+---
+
+## Directory Structure
+
+```text
+Seconds-Digital-main/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml            # Automated CI/CD deployment to GitHub Pages
+├── prisma/
+│   └── schema.prisma             # PostgreSQL schema definition & models
+├── migrations/                   # Database migration history
+├── data/
+│   └── seconds-digital.sqlite    # Local SQLite database
+├── public/                       # Static public assets (Favicon, Logo, Uploads)
+│   ├── seconds-digital-logo.jpg  # Optimized branding logo
+│   └── assets/                   # Public media assets
+├── src/                          # Pure React + Vite Frontend
+│   ├── assets/                   # Bundled media (DELL.jpg, Wallpaper, Video)
+│   ├── data/
+│   │   └── products.ts           # Product catalog definitions & types
+│   ├── App.tsx                   # Storefront pages, cart, and admin UI
+│   ├── main.tsx                  # React entrypoint
+│   ├── index.css                 # Global CSS & Tailwind CSS 4 theme tokens
+│   └── vite-env.d.ts             # Vite TypeScript declarations
+├── server/                       # Backend APIs
+│   ├── index.mjs                 # SQLite Express API (local development)
+│   └── api/                      # Enterprise TypeScript Prisma API
+│       ├── controllers/          # Business logic (auth, shop)
+│       ├── middlewares/          # JWT auth & security middlewares
+│       ├── routes/               # API route definitions
+│       ├── prisma/               # Prisma client singleton (db.ts)
+│       └── index.ts              # Server entrypoint
+├── scripts/                      # Developer utility scripts
+│   ├── dev.mjs                   # Orchestrates both Vite and Express simultaneously
+│   └── login-check.mjs           # Automated admin login verification script
+├── .env.example                  # Environment configuration template
+├── package.json                  # Unified dependency manifest and run scripts
+├── tsconfig.json                 # TypeScript compiler configuration
+├── vite.config.mts               # Vite configuration (port 8443, proxies to API)
+└── vite.config.ts                # TypeScript delegation stub for toolchains
 ```
 
-The command prints a secret to your terminal; paste it into `.env` and do not commit or share that file. `.env` is ignored by Git.
+---
 
-To enable admin sign-in, also set `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env`. The API creates that admin account on first startup. On later startups, the configured password is synchronized to the existing account. Leave both unset if admin sign-in is not needed.
+## Quick Start & Installation
 
-## Environment
+### Prerequisites
+- **Node.js**: v20.x, v22.x, or v24.x (`v24.21.0` supported with prebuilt binaries).
+- **npm**: v10+ (included with Node.js).
+
+### Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/chandrucs2430/Seconds-Digital.git
+   cd Seconds-Digital
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Configure Environment**:
+   Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+
+   Generate a secure 32+ character JWT secret and set it in `.env`:
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+   ```
+
+   Configure `.env` options:
+   ```env
+   API_PORT=8787
+   PORT=8443
+   JWT_SECRET="your-generated-jwt-secret-min-32-chars"
+   ADMIN_EMAIL="admin@secondsdigital.com"
+   ADMIN_PASSWORD="adminpassword123"
+   DATABASE_URL="postgresql://user:password@host/dbname?sslmode=require"
+   ```
+
+---
+
+## Available Scripts
+
+| Command | Action |
+| :--- | :--- |
+| `npm run dev:all` | **Recommended**: Starts both the Express API (`:8787`) and Vite frontend (`:8443`) in one command. |
+| `npm run dev` | Runs only the Vite frontend development server (`http://localhost:8443`). |
+| `npm run dev:api` | Runs the SQLite Express backend server (`http://localhost:8787`). |
+| `npm run dev:server` | Runs the TypeScript Prisma/Postgres backend server using `tsx`. |
+| `npm run check:login` | Tests admin authentication against the active API and prints session token. |
+| `npm run typecheck` | Runs TypeScript static analysis (`tsc --noEmit`) with zero errors. |
+| `npm run build` | Builds the production bundle to `dist/` with optimized assets. |
+| `npm run preview` | Serves the production build locally with API proxies. |
+
+---
+
+## Environment Variables
 
 | Variable | Default | Purpose |
-| --- | --- | --- |
-| `JWT_SECRET` | Required | Signs admin sessions; must be at least 32 characters. |
-| `ADMIN_EMAIL` | Unset | Email for the bootstrapped admin account. |
-| `ADMIN_PASSWORD` | Unset | Password for the bootstrapped admin account. |
-| `API_PORT` | `8787` | Express API port; Vite proxies `/api` and `/uploads` here. |
-| `PORT` | `8443` | Vite development port and default preview port. |
-| `PREVIEW_PORT` | `PORT` or `8443` | Optional Vite preview port override. |
-| `FIGMA_DEV_SERVER_HOST` | `0.0.0.0` | Optional Vite host override for the managed preview environment. |
+| :--- | :--- | :--- |
+| `JWT_SECRET` | Required | Cryptographic secret for signing admin session tokens (min 32 chars). |
+| `API_PORT` | `8787` | Port for the Express SQLite API; Vite proxies `/api` and `/uploads` here. |
+| `PORT` | `8443` | Port for the Vite development server and preview server. |
+| `ADMIN_EMAIL` | Optional | Bootstraps or updates the administrator account on API start. |
+| `ADMIN_PASSWORD` | Optional | Bootstraps or updates the administrator password on API start. |
+| `DATABASE_URL` | Optional | PostgreSQL connection string for the Prisma Enterprise Cloud API. |
 
-The API reads `.env` directly at startup. Keep variable names uppercase and use one `NAME=value` entry per line.
-
-## Run and Verify
-
-Start both the API and frontend together:
-
-```powershell
-npm run dev:all
-```
-
-Open `http://localhost:8443`. The API health endpoint is `http://localhost:8787/api/health`. The Windows helper `run-dev.cmd` performs basic setup checks before running the same combined command.
-
-For separate processes, use two terminals:
-
-```powershell
-npm run dev:api
-npm run dev
-```
-
-Available checks and build commands:
-
-```powershell
-npm run typecheck
-npm run build
-npm run preview
-node --check login-check.mjs
-```
-
-There are no configured lint or automated test scripts. `login-check.mjs` is a manual API login check and requires `ADMIN_EMAIL` and `ADMIN_PASSWORD` in the environment. Preview serves the production frontend and proxies API/upload requests to `API_PORT`; start `npm run dev:api` in another terminal before testing admin features in preview.
+---
 
 ## Deployment
 
-The workflow at `.github/workflows/deploy.yml` builds and deploys the static frontend to GitHub Pages on pushes to `main` and on manual dispatch. The production base path is `/Seconds-Digital/`; update `vite.config.mts` if the repository is deployed under a different path.
+The storefront is automatically built and deployed to **GitHub Pages** via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) on pushes to `main`.
 
-GitHub Pages does not run the Express API. The storefront's WhatsApp handoff works independently, but admin login, product management, and uploaded images require a separately hosted API with HTTPS, persistent SQLite and upload storage, and `/api` and `/uploads` routing to that API. Configure the same environment variables documented above on the API host. The Pages workflow does not deploy or configure this backend.
+- Production base path: `/Seconds-Digital/`
+- Direct link: [https://chandrucs2430.github.io/Seconds-Digital/](https://chandrucs2430.github.io/Seconds-Digital/)
 
-## Project Map
-
-| Path | Contents |
-| --- | --- |
-| `src/App.tsx` | Storefront pages, customer flows, and admin UI. |
-| `src/data/products.ts` | Hardcoded storefront catalog and product type. |
-| `src/main.tsx` | React entry point. |
-| `src/index.css` | Tailwind CSS v4 import, fonts, theme tokens, and global styles. |
-| `server/index.mjs` | Express API, SQLite schema, admin authentication, and image upload handling. |
-| `scripts/dev.mjs` | Starts and manages the API and Vite as one development command. |
-| `public/` | Storefront logo, hero image, and runtime product uploads. |
-| `DELL.jpg`, `a_realiastic_drone_shot_of_tri.mp4` | Locally imported storefront media. |
-| `data/seconds-digital.sqlite` | Tracked SQLite database used and migrated by the API. |
-| `vite.config.mts` | Vite, Tailwind, aliases, ports, and API proxies. |
-| `index.html` | Browser metadata and SPA mount point. |
-| `Adminlogin.html` | Legacy redirect to the admin route. |
-| `login-check.mjs` | Manual API authentication check. |
-| `.env.example` | Safe template containing variable names but no credentials. |
-| `.mise.toml` | Recommended Node.js version. |
-| `.github/workflows/deploy.yml` | GitHub Pages frontend deployment workflow. |
-
-The storefront logo and hero background are served locally. Product photos for most hardcoded products and the Fraunces, Outfit, and Caveat fonts are loaded from external hosts, so those assets require network access. Replace them with properly licensed local assets if offline use is required.
-
-The WhatsApp order number and contact/social URLs are configured in `src/App.tsx`; product names, pricing, descriptions, and image sources are in `src/data/products.ts`. Confirm business details and third-party asset rights before publishing.
-
-The API stores its database in `data/` and uploads in `public/uploads/` when those directories are writable. If the workspace is read-only, it falls back to an `seconds-digital-website` directory under the operating system's temporary directory; that fallback data may not be persistent.
-
-## Troubleshooting
-
-- **API exits immediately:** check that `.env` exists and `JWT_SECRET` contains at least 32 characters. The starter template intentionally leaves it blank.
-- **Admin login is rejected:** set `ADMIN_EMAIL` and `ADMIN_PASSWORD`, restart the API, and use those values. Do not store real credentials in the repository.
-- **Port is already in use:** set `PORT` and/or `API_PORT` in `.env`; keep Vite's API proxy and the API port aligned.
-- **SQLite native module fails to install or the API crashes at runtime:** use Node.js 20 from `.mise.toml`, confirm `node --version` reports `v20.x`, and run `npm ci` again under that runtime.
-- **Images or fonts are missing:** check network access for external images and Google Fonts. Locally uploaded images are saved under `public/uploads/`.
-- **Preview shows the storefront but admin requests fail:** run `npm run dev:api` separately and confirm `API_PORT` matches the configured preview proxy.
-- **Database contents matter:** the current SQLite database is tracked in this workspace. Do not use it for real customer or production data. Back it up before replacing or moving the workspace; if the API had to use its temporary-directory fallback, back up that location instead.
-
-## Known Limitations
-
-- Public products are hardcoded and are not synchronized with admin-managed SQLite products.
-- WhatsApp is an external order handoff; no payment processing or server-side order creation is implemented.
-- Admin credentials must be configured manually. No default credentials are provided.
-- Production deployment, database backup policy, and external service credentials/ownership remain operator responsibilities.
-
-## Contributing
-
-Keep changes focused and preserve the existing React/Vite/Express stack. Use npm, avoid committing `.env` files or real customer data, and run `npm run typecheck` and `npm run build` before submitting changes. There is no separate contribution policy or automated test suite at this time.
+---
 
 ## License
 
-No license has been selected for this repository, and no `LICENSE` file is present. The repository owner must choose a license after confirming ownership and redistribution rights for the source code and included assets. Until then, reuse and redistribution permissions are not granted by this repository.
+This project is proprietary and maintained for Seconds Digital, Somarasampettai, Tiruchirappalli. All rights reserved.

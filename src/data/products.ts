@@ -1,4 +1,4 @@
-import dellLaptopImage from '../../DELL.jpg';
+import dellLaptopImage from '@/assets/DELL.jpg';
 
 export interface Product {
   id: number;

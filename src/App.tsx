@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, FormEvent } from 'react';
-import heroVideo from '../a_realiastic_drone_shot_of_tri.mp4';
+import heroVideo from '@/assets/a_realiastic_drone_shot_of_tri.mp4';
 import { PRODUCTS, type Product } from './data/products';
 
 // ─── Types ──────────────────────────────────────────────────────────────────

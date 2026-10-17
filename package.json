@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "vite",
     "dev:api": "node server/index.mjs",
-    "dev:server": "tsx src/index.ts",
+    "dev:server": "tsx server/api/index.ts",
     "dev:all": "node scripts/dev.mjs",
+    "check:login": "node --env-file=.env scripts/login-check.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
